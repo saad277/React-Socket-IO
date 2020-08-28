@@ -1,11 +1,43 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import queryString from 'query-string'
+import io from 'socket.io-client'
+
+let socket;
+
+const Chat = ({ location }) => {              //location comes from react-router
+
+    const [name, setName] = useState("")
+    const [room, setRoom] = useState("")
+
+    const ENDPOINT = "localhost:5000"
+
+    useEffect(() => {
+
+        const { name, room } = queryString.parse(location.search)
+
+        console.log(name, room)
+
+        socket = io(ENDPOINT)
+
+        setName(name)
+        setRoom(room)
+
+        socket.emit("join", { name: name, room: room }, () => {
+
+            
+        })
+
+        return ()=>{
+            socket.emit("disconnect")
+            socket.off()
+        }
 
 
 
-const Chat=()=>{
+    }, [ENDPOINT, location.search])
 
 
-    return(
+    return (
         <div>
             <h2>Chat</h2>
         </div>

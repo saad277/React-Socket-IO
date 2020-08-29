@@ -8,6 +8,8 @@ const Chat = ({ location }) => {              //location comes from react-router
 
     const [name, setName] = useState("")
     const [room, setRoom] = useState("")
+    const [message, setMessage] = useState("")
+    const [messages, setMessages] = useState([])
 
     const ENDPOINT = "localhost:5000"
 
@@ -22,12 +24,12 @@ const Chat = ({ location }) => {              //location comes from react-router
         setName(name)
         setRoom(room)
 
-        socket.emit("join", { name: name, room: room }, () => {
+        socket.emit("join", { name: name, room: room }, () => {         //last one is callback
 
-            
+
         })
 
-        return ()=>{
+        return () => {
             socket.emit("disconnect")
             socket.off()
         }
@@ -35,6 +37,18 @@ const Chat = ({ location }) => {              //location comes from react-router
 
 
     }, [ENDPOINT, location.search])
+
+
+    useEffect(() => {
+
+        socket.on("message", (message) => {
+
+            setMessages([...messages, message])
+
+        })
+
+    }, [messages])
+
 
 
     return (

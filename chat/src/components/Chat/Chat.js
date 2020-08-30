@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react'
 import queryString from 'query-string'
 import io from 'socket.io-client'
 
+
+import "./chat.css"
+
+import InfoBar from '../InfoBar/InfoBar'
+
 let socket;
 
 const Chat = ({ location }) => {              //location comes from react-router
@@ -50,10 +55,33 @@ const Chat = ({ location }) => {              //location comes from react-router
     }, [messages])
 
 
+    const sendMessage = (event) => {
+        event.preventDefault();
+
+        if(message){
+
+            socket.emit("sendMessage",message,()=>{
+
+                setMessage("")
+            })
+        }
+
+    }
+
+    console.log(message)
+    console.log(messages)
 
     return (
-        <div>
-            <h2>Chat</h2>
+        <div className="outerContainer">
+             <InfoBar room={room} />
+            <div className="container">
+                <input
+                    value={message}
+                    onChange={(event) => setMessage(event.target.value)}
+                    onKeyPress={(event) => event.key === "Enter" ? sendMessage(event) : null}
+                />
+            </div>
+
         </div>
     )
 }

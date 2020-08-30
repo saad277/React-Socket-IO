@@ -20,7 +20,7 @@ io.on("connection", (socket) => {
 
     socket.on("join", (data, callback) => {
 
-        const { error, user } = addUser({ id: socket.id, name, room })
+        const { error, user } = addUser({ id: socket.id, name: data.name, room: data.room })
 
         if (error) {
             return callback(error);
